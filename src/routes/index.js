@@ -2,14 +2,21 @@ import express from "express"
 import path from "path"
 import checkPermission from "../middlewares/permissionChecker.js"
 import roleRoute from "./role.routes.js"
+import authRoute from "./auth.routes.js"
 const router = express.Router()
 
 const defaultRoutes = [
 	
 	{
-		name: roleRoute,
+		name: 'Role',
 		path: "/role",
 		route: roleRoute,
+	},
+	{
+		name: 'Auth',
+		path: "/auth",
+		route: authRoute,
+
 	}
 ]
 

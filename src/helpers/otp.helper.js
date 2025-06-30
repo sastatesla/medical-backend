@@ -1,7 +1,6 @@
-const { AxiosHelper } = require('./helpers/axiosHelper'); // adjust path as needed
-const config = require('./config');
-const { DEFAULT_PHONE_NUMBERS, DEFAULT_OTP, DEFAULT_OTP_LENGTH, MESSAGE_TEMPLATE, MSG_TEMPLATE_ID, OTP_RESPONSE_SLUGS } = require('./constants');
-const eventEmitter = require('./eventEmitter'); // adjust path as needed
+import AxiosHelper from "./axios.helper.js";
+import { DEFAULT_PHONE_NUMBERS, DEFAULT_OTP, DEFAULT_OTP_LENGTH, MESSAGE_TEMPLATE, MSG_TEMPLATE_ID, OTP_RESPONSE_SLUGS } from '../utils/constants.js';
+import  eventEmitter from '../utils/logging.js'; 
 
 async function sendOtp(phoneNumber) {
 	if (DEFAULT_PHONE_NUMBERS.includes(phoneNumber.toString())) {
@@ -29,7 +28,7 @@ async function sendOtp(phoneNumber) {
 	try {
 		const axiosHelper = new AxiosHelper(process.env.OTP_BASE_URL);
 		const response = await axiosHelper.request(
-			config.otp.sentOtpEndPoint,
+			process.env.SEND_OTP_ENDPOINT,
 			undefined,
 			"POST",
 			data
@@ -69,7 +68,7 @@ async function verifyOtp(phoneNumber, otp, sessionId) {
 	try {
 		const axiosHelper = new AxiosHelper(process.env.OTP_BASE_URL);
 		const response = await axiosHelper.request(
-			config.otp.verifyOtpEndPoint,
+			process.env.VERIFY_OTP_ENDPOINT,
 			undefined,
 			"POST",
 			data
@@ -97,7 +96,7 @@ async function verifyOtp(phoneNumber, otp, sessionId) {
 	}
 }
 
-module.exports = {
+export default {
 	sendOtp,
 	verifyOtp
 };
