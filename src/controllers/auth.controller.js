@@ -1,5 +1,5 @@
 import { AuthService } from "../services/index.js";
-import { ApiResponse } from "../utils/ApiResponse";
+import { ApiResponse } from "../utils/ApiResponse.js";
 
 class AuthController{
     constructor(){
@@ -7,6 +7,7 @@ class AuthController{
         this.register = this.register.bind(this);
         this.veryfyOTP = this.verifyOTP.bind(this);
         this.refreshToken = this.refreshToken.bind(this);
+        this.getProfile = this.getProfile.bind(this);
     }
 
 
@@ -73,7 +74,7 @@ class AuthController{
         const APIresponse = new ApiResponse(res);
         try {
             const {phoneNumber, otp, sessionId} = req.body;
-            const isVerified = await this.verifyOtp(phoneNumber, otp, sessionId);
+            const isVerified = await AuthService.verifyOTP(phoneNumber, otp, sessionId);
             return APIresponse.successResponse({
                 message: 'OTP verified successfully',
                 data: { isVerified }
@@ -88,10 +89,23 @@ class AuthController{
         const APIresponse = new ApiResponse(res);
         try {
             const {refreshToken} = req.body;
-            const response = await this.refreshAccessToken(refreshToken);
+            const response = await AuthService.refreshToken(refreshToken);
             return APIresponse.successResponse({
                 message: 'Token refreshed successfully',
                 data: response
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+    async getProfile(req, res, next) {
+        const APIresponse = new ApiResponse(res);
+        try {
+            const userId = req.user.userId; 
+            const profile = await AuthService.getProfile(userId);
+            return APIresponse.successResponse({
+                message: 'Profile fetched successfully',
+                data: profile
             });
         } catch (error) {
             next(error);

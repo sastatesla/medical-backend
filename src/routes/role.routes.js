@@ -1,23 +1,24 @@
 import express from 'express';
-const router = express.Router();
 import { RoleController } from "../controllers/index.js";
 import validate from "../middlewares/validate.js";
-import roleVlidation from '../validations/role.vlidation.js';
+import { RoleValidation } from '../validations/index.js';
+
+const router = express.Router();
 
 router.post(
     '/create',
-    validate(roleVlidation.role),
+    validate(RoleValidation.role),
     RoleController.createRole
 );
 
 router.get(
     '/list',
-    validate(roleVlidation.roleQuery),
+    validate(RoleValidation.roleQuery),
     RoleController.getRoles
 )
 router.delete(
     '/delete/:id',
-    validate(roleVlidation.deleteRole),
+    validate(RoleValidation.deleteRole),
     RoleController.deleteRole
 );
 

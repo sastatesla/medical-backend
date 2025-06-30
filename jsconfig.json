@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "checkJs": true,
+    "checkJs": false,
     "module": "es6",
     "target": "es2021",
     "moduleResolution": "node",

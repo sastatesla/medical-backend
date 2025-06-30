@@ -7,6 +7,7 @@ import eventEmitter from './utils/logging.js';
 import xssSanitizer from './middlewares/xss.js';
 import helmet from 'helmet';
 import compression from 'compression';
+import { authLimiter } from './utils/rateLimiter.js';
 
 dotenv.config();
 
