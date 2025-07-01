@@ -3,6 +3,8 @@ import path from "path"
 import checkPermission from "../middlewares/permissionChecker.js"
 import roleRoute from "./role.routes.js"
 import authRoute from "./auth.routes.js"
+import caregiverRoute from "./caregiver.routes.js"
+import auth from "../middlewares/auth.js"
 const router = express.Router()
 
 const defaultRoutes = [
@@ -17,6 +19,12 @@ const defaultRoutes = [
 		path: "/auth",
 		route: authRoute,
 
+	},
+	{
+		name: 'Caregiver',
+		path: "/caregiver",
+		route: caregiverRoute,
+		isProtected: true
 	}
 ]
 

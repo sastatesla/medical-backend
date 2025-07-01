@@ -8,18 +8,70 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model url{
-  id        Int      @id @default(autoincrement())
-  originalUrl String @unique
-  shortCode String   @unique
-  clicks      Int      @default(0)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
 
 model Role{
   id        Int      @id @default(autoincrement())
   roleName  String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  users     User[]   @relation("RoleToUsers")
 }
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  roleId    Int
+  role      Role     @relation("RoleToUsers", fields: [roleId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  sentCaregiverRequests     CaregiverRequest[] @relation("CaregiverRequestSender")
+  receivedCaregiverRequests CaregiverRequest[] @relation("CaregiverRequestReceiver")
+  caregiverFor  CaregiverAccess[] @relation("CaregiverAccessSender")
+  patientFor    CaregiverAccess[] @relation("CaregiverAccessReceiver")
+  healthRecords HealthRecord[] 
+}
+
+model CaregiverRequest {
+  id           Int                     @id @default(autoincrement())
+  caregiverId  Int
+  patientId    Int
+  message      String?
+  status       CaregiverRequestStatus @default(pending)
+  requestedAt  DateTime               @default(now())
+  reviewedAt   DateTime?
+
+  caregiver    User     @relation("CaregiverRequestSender", fields: [caregiverId], references: [id])
+  patient      User     @relation("CaregiverRequestReceiver", fields: [patientId], references: [id])
+}
+
+model CaregiverAccess {
+  id          Int      @id @default(autoincrement())
+  caregiverId Int
+  patientId   Int
+  grantedAt   DateTime @default(now())
+
+  caregiver   User     @relation("CaregiverAccessSender", fields: [caregiverId], references: [id])
+  patient     User     @relation("CaregiverAccessReceiver", fields: [patientId], references: [id])
+}
+
+model HealthRecord {
+  id         Int      @id @default(autoincrement())
+  userId     Int      
+  title      String
+  date       DateTime
+  type       String    
+  language   String    
+  tags       String[]  @default([]) 
+  deleted    Boolean   @default(false)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  user       User      @relation(fields: [userId], references: [id])
+}
+
+
+enum CaregiverRequestStatus {
+  pending
+  approved
+  rejected
+}
+
